@@ -8,8 +8,10 @@ import com.example.soulware_week1.board.domain.Board;
 import com.example.soulware_week1.board.domain.repository.BoardRepository;
 import com.example.soulware_week1.board.exception.BoardNotFoundException;
 import com.example.soulware_week1.board.exception.InvalidPageException;
+import com.example.soulware_week1.board.exception.NotBoardOwnerException;
 import com.example.soulware_week1.global.jwt.domain.CustomUserDetail;
 import com.example.soulware_week1.global.jwt.exception.MemberNotFoundException;
+import com.example.soulware_week1.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,9 +27,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     public BoardListRspDto findAll(Pageable pageable, CustomUserDetail member) {
-
         if (member == null) {
-            throw new MemberNotFoundException("회원만 접근할 수 있습니다.");
+            throw new MemberNotFoundException();
         }
 
         Page<BoardDto> boardDtos = boardRepository.findAll(pageable)
@@ -48,41 +49,62 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResDto createBoard(BoardSaveReqDto boardSaveReqDto) {
+    public BoardResDto createBoard(BoardSaveReqDto boardSaveReqDto, Member member) {
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
 
-        Board board = builderBoard(boardSaveReqDto);
-
+        Board board = builderBoard(boardSaveReqDto, member);
         Board saveBoard = boardRepository.save(board);
-
         return BoardResDto.of(saveBoard);
     }
 
-    private Board builderBoard(BoardSaveReqDto boardSaveReqDto) {
+    private Board builderBoard(BoardSaveReqDto boardSaveReqDto, Member member) {
         return Board.builder()
                 .title(boardSaveReqDto.title())
                 .contents(boardSaveReqDto.contents())
+                .member(member)
                 .build();
     }
 
     @Transactional
-    public BoardResDto updateBoard(Long boardId, BoardSaveReqDto boardSaveReqDto) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException(boardId));
+    public BoardResDto updateBoard(Long boardId, BoardSaveReqDto boardSaveReqDto, Member member) {
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException(boardId));
+
+        if (!board.getMember().equals(member)) {
+            throw new NotBoardOwnerException();
+        }
 
         board.update(boardSaveReqDto);
-
         return BoardResDto.of(board);
     }
 
     @Transactional
-    public void deleteBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException(boardId));
+    public void deleteBoard(Long boardId, Member member) {
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException(boardId));
+
+        if (!board.getMember().equals(member)) {
+            throw new NotBoardOwnerException();
+        }
 
         boardRepository.delete(board);
     }
 
     public BoardResDto getBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException(boardId));
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException(boardId));
 
         return BoardResDto.of(board);
     }
 }
+

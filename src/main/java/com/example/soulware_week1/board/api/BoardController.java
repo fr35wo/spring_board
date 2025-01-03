@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
     private final BoardService boardService;
 
-    @Operation(summary = "게시물 조회", description = "전체 게시물 조회 합니다")
+    @Operation(summary = "게시물 조회", description = "전체 게시물 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = BoardListRspDto.class))),
     })
@@ -59,54 +59,53 @@ public class BoardController {
         );
     }
 
-    @Operation(summary = "게시물 등록", description = "게시물 등록 합니다")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "등록 성공", content = @Content(schema = @Schema(implementation = BoardResDto.class))),
-    })
+    @Operation(summary = "게시물 등록", description = "게시물 등록합니다.")
     @PostMapping
-    public RspTemplate<BoardResDto> createBoard(@Valid @RequestBody BoardSaveReqDto boardRequestDto) {
-        BoardResDto boardResDto = boardService.createBoard(boardRequestDto);
+    public RspTemplate<BoardResDto> createBoard(
+            @Valid @RequestBody BoardSaveReqDto boardRequestDto,
+            @AuthenticationPrincipal CustomUserDetail member
+    ) {
+        BoardResDto boardResDto = boardService.createBoard(boardRequestDto, member.getMember());
         return new RspTemplate<>(HttpStatus.OK
                 , boardResDto.boardId() + "번 게시판 등록 완료"
                 , boardResDto
         );
     }
 
-
-    @Operation(summary = "게시물 수정", description = "게시물 수정 합니다")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = BoardResDto.class))),
-    })
+    @Operation(summary = "게시물 수정", description = "게시물 수정합니다.")
     @PutMapping
-    public RspTemplate<BoardResDto> updateBoard(@RequestParam("boardId") Long boardId,
-                                                @Valid @RequestBody BoardSaveReqDto boardRequestDto) {
-        BoardResDto boardResDto = boardService.updateBoard(boardId, boardRequestDto);
+    public RspTemplate<BoardResDto> updateBoard(
+            @RequestParam("boardId") Long boardId,
+            @Valid @RequestBody BoardSaveReqDto boardRequestDto,
+            @AuthenticationPrincipal CustomUserDetail member
+    ) {
+        BoardResDto boardResDto = boardService.updateBoard(boardId, boardRequestDto, member.getMember());
         return new RspTemplate<>(HttpStatus.OK
                 , boardId + "번 게시물 수정 완료"
                 , boardResDto);
     }
 
-    @Operation(summary = "게시물 삭제", description = "게시물 삭제 합니다")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "삭제 성공"),
-    })
+    @Operation(summary = "게시물 삭제", description = "게시물 삭제합니다.")
     @DeleteMapping
-    public RspTemplate<Void> deleteBoard(@RequestParam("boardId") Long boardId) {
-        boardService.deleteBoard(boardId);
+    public RspTemplate<Void> deleteBoard(
+            @RequestParam("boardId") Long boardId,
+            @AuthenticationPrincipal CustomUserDetail member
+    ) {
+        boardService.deleteBoard(boardId, member.getMember());
         return new RspTemplate<>(HttpStatus.OK, boardId + "번 게시물 삭제 완료");
     }
 
-    @Operation(summary = "상세 페이지", description = "상세 페이지로 넘겨 줍니다")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = BoardResDto.class))),
-    })
+    @Operation(summary = "상세 페이지", description = "상세 페이지로 넘겨줍니다.")
     @GetMapping
-    public RspTemplate<BoardResDto> getBoard(@RequestParam("boardId") Long boardId) {
+    public RspTemplate<BoardResDto> getBoard(
+            @RequestParam("boardId") Long boardId,
+            @AuthenticationPrincipal CustomUserDetail member
+    ) {
         BoardResDto boardResDto = boardService.getBoard(boardId);
         return new RspTemplate<>(HttpStatus.OK
                 , boardId + "상세뷰 확인 완료"
                 , boardResDto
         );
     }
-
 }
+

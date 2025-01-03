@@ -1,6 +1,7 @@
 package com.example.soulware_week1.global.error;
 
 import com.example.soulware_week1.global.error.dto.ErrorResponse;
+import com.example.soulware_week1.global.error.exception.AccessDeniedGroupException;
 import com.example.soulware_week1.global.error.exception.AuthGroupException;
 import com.example.soulware_week1.global.error.exception.InvalidGroupException;
 import com.example.soulware_week1.global.error.exception.NotFoundGroupException;
@@ -39,6 +40,14 @@ public class ControllerAdvice {
         log.error(e.getMessage());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({AccessDeniedGroupException.class})
+    public ResponseEntity<ErrorResponse> handleAccessDeniedDate(RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.value(), e.getMessage());
+        log.error(e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -46,9 +46,10 @@ public class Board {
     private Member member;
 
     @Builder
-    private Board(String title, String contents) {
+    private Board(String title, String contents, Member member) {
         this.title = title;
         this.contents = contents;
+        this.member = member;
     }
 
     public void update(BoardSaveReqDto boardSaveReqDto) {

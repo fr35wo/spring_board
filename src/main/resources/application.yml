@@ -2,6 +2,10 @@ spring:
   profiles:
     active: prod
 
+  web:
+    resources:
+      add-mappings: false
+
   datasource:
     url: ${spring.datasource.url}
     username: ${spring.datasource.username}
@@ -16,6 +20,8 @@ spring:
         show_sql: true
         format_sql: true
     open-in-view: false
+
+
 
 server:
   tomcat:
