@@ -1,0 +1,62 @@
+spring:
+  profiles:
+    active: prod
+
+  datasource:
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    driver-class-name: ${spring.datasource.driver-class-name}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    open-in-view: false
+
+server:
+  tomcat:
+    threads:
+      max: 200          # 최대 스레드 수 (maximumPoolSize)
+      min-spare: 100     # 최소 대기 스레드 수 (corePoolSize와 비슷)
+    accept-count: 1000     # 대기 큐 용량 (ArrayBlockingQueue와 유사)
+
+#Hibernate가 실행하는 모든 작업을 자세히 기록
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG # Hibernate SQL 로그 활성화
+#        type:
+#          descriptor:
+#            sql:
+#              BasicBinder: TRACE # SQL 파라미터 바인딩 로그 출력
+
+jwt:
+  secret: ${jwt.secret}
+
+token:
+  expire:
+    time:
+      access: ${token.expire.time.access}
+      refresh: ${token.expire.time.refresh}
+
+springdoc:
+  packages-to-scan: com.example
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    tags-sorter: method
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enabled: true
+  cache:
+    disabled: true
+
+myapp:
+  local-url: ${myapp.local-url}
