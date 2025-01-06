@@ -32,7 +32,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationEntryPo
         } else if (authException instanceof CredentialsExpiredException) {
             data.put("message", "인증 정보가 만료되었습니다.");
         } else {
-            // 기타 다른 AuthenticationException 유형에 대한 처리
             data.put("message", "인증에 실패하였습니다."); // 기본 메시지
         }
 

@@ -21,14 +21,16 @@ spring:
         format_sql: true
     open-in-view: false
 
-
-
 server:
   tomcat:
     threads:
       max: 200          # 최대 스레드 수 (maximumPoolSize)
       min-spare: 100     # 최소 대기 스레드 수 (corePoolSize와 비슷)
     accept-count: 1000     # 대기 큐 용량 (ArrayBlockingQueue와 유사)
+  error:
+    include-message: always # message 정보를 항상 포함
+    include-binding-errors: always # 바인딩 에러 포함 여부
+    include-stacktrace: never # 스택트레이스를 숨기거나 표시
 
 #Hibernate가 실행하는 모든 작업을 자세히 기록
 #logging:
