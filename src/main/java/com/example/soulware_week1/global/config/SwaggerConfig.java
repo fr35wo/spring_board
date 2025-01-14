@@ -20,7 +20,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         Info info = new Info()
-                .title("CoPro API Document")
+                .title("API Document")
                 .version("v0.0.1")
                 .description("Board 문서");
 

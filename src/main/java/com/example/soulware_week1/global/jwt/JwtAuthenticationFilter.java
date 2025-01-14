@@ -15,6 +15,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 //클라이언트로부터 들어오는 요청에서 JWT 토큰을 처리하고,
 // 유효한 토큰인 경우 해당 토큰의 인증 정보(Authentication)를 SecurityContext에 저장하여 인증된 요청을 처리할 수 있도록 한다.
 //JWT를 통해 username + password 인증을 수행
+//SecurityContextPersistenceFilter는 상태 저장 세션 관리에서 사용됩니다.
+//SessionCreationPolicy.STATELESS 설정에서는 SecurityContextPersistenceFilter가 포함되지 않으며, SecurityContextHolder에 인증 정보를 저장하는 책임은 개발자가 직접 관리해야 합니다.
+//**JwtAuthenticationFilter**에서 인증 정보를 수동으로 저장하고, 요청 종료 시 초기화합니다.
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -32,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 2. validateToken으로 토큰 유효성 검사
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
+            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 수동으로 저장
             //현재 Authentication 객체는 인증 전 토큰 객체
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);

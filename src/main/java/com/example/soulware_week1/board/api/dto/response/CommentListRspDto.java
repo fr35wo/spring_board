@@ -3,15 +3,15 @@ package com.example.soulware_week1.board.api.dto.response;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
-public record BoardListRspDto(
-        List<BoardResDto> content,
+public record CommentListRspDto(
+        List<CommentResDto> content,
         int page,
         int size,
         int totalPages,
         long totalElements
 ) {
-    public static BoardListRspDto of(Page<BoardResDto> page) {
-        return new BoardListRspDto(
+    public static CommentListRspDto of(Page<CommentResDto> page) {
+        return new CommentListRspDto(
                 page.getContent(),
                 page.getNumber() + 1,
                 page.getSize(),
@@ -20,3 +20,5 @@ public record BoardListRspDto(
         );
     }
 }
+
+

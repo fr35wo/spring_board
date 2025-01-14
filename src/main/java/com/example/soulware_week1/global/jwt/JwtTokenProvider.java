@@ -16,6 +16,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,7 +69,9 @@ public class JwtTokenProvider {
         // Refresh Token 생성
         Date refreshTokenExpiresIn = new Date(now + Long.parseLong(refreshTokenExpireTime));
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
                 .setExpiration(refreshTokenExpiresIn)
+                .claim("random", UUID.randomUUID().toString())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 

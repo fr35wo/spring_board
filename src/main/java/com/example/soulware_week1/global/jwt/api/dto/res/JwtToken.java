@@ -6,8 +6,7 @@ import lombok.Builder;
 @Builder
 public record JwtToken(
         String accessToken,
-        String refreshToken,
-        String userNickname
+        String refreshToken
 ) {
 
 }

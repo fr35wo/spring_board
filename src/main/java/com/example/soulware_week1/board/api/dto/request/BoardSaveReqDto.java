@@ -5,10 +5,10 @@ import lombok.Builder;
 
 @Builder
 public record BoardSaveReqDto(
-        @NotBlank
+        @NotBlank(message = "게시글 제목은 비워둘 수 없습니다.")
         String title,
 
-        @NotBlank
+        @NotBlank(message = "게시글 내용은 비워둘 수 없습니다.")
         String contents
 ) {
 }

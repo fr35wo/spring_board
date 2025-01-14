@@ -7,13 +7,15 @@ import lombok.Builder;
 public record BoardResDto(
         Long boardId,
         String title,
-        String contents
+        String contents,
+        String nickName
 ) {
     public static BoardResDto of(Board board) {
         return BoardResDto.builder()
                 .boardId(board.getBoardId())
                 .title(board.getTitle())
                 .contents(board.getContents())
+                .nickName(board.getMember().getNickname())
                 .build();
     }
 }

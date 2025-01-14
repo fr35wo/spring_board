@@ -9,6 +9,7 @@ public class BoardFixtureFactory {
         EasyRandomParameters parameters = new EasyRandomParameters()
                 .stringLengthRange(5, 15)
                 .excludeField(f -> f.getName().equals("boardId"))
+                .randomize(Long.class, () -> null)
                 .collectionSizeRange(1, 5);
 
         return new EasyRandom(parameters);

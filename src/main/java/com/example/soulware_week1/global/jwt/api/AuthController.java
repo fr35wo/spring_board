@@ -7,7 +7,7 @@ import com.example.soulware_week1.global.jwt.api.dto.req.SignUpReqDto;
 import com.example.soulware_week1.global.jwt.api.dto.res.JwtToken;
 import com.example.soulware_week1.global.jwt.api.dto.res.MemberTokenResDto;
 import com.example.soulware_week1.global.jwt.application.TokenService;
-import com.example.soulware_week1.global.template.RspTemplate;
+import com.example.soulware_week1.global.template.ResponseTemplate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,12 +35,12 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "토큰 발급 성공")
     })
     @PostMapping("/sign-in")
-    public RspTemplate<JwtToken> signIn(@RequestBody @Valid SignInReqDto signInReqDto) {
+    public ResponseTemplate<JwtToken> signIn(@Valid @RequestBody SignInReqDto signInReqDto) {
         String username = signInReqDto.username();
         String password = signInReqDto.password();
         JwtToken jwtToken = tokenService.signIn(username, password);
 
-        return new RspTemplate<>(HttpStatus.OK, "로그인 성공", jwtToken);
+        return new ResponseTemplate<>(HttpStatus.OK, "로그인 성공", jwtToken);
     }
 
     @Operation(summary = "회원가입", description = "회원가입 합니다.")
@@ -48,9 +48,9 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "회원가입 성공")
     })
     @PostMapping("/sign-up")
-    public RspTemplate<MemberTokenResDto> signUp(@RequestBody SignUpReqDto signUpReqDto) {
+    public ResponseTemplate<MemberTokenResDto> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
         MemberTokenResDto memberTokenResDto = tokenService.signUp(signUpReqDto);
-        return new RspTemplate<>(HttpStatus.OK, "회원가입 성공", memberTokenResDto);
+        return new ResponseTemplate<>(HttpStatus.OK, "회원가입 성공", memberTokenResDto);
     }
 
     @Operation(summary = "액세스 토큰 재발급", description = "리프레쉬 토큰으로 액세스 토큰을 발급합니다.")
@@ -58,10 +58,10 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "토큰 발급 성공")
     })
     @PostMapping("/access")
-    public RspTemplate<JwtToken> generateAccessToken(@RequestBody RefreshTokenReqDto refreshTokenReqDto) {
+    public ResponseTemplate<JwtToken> generateAccessToken(@Valid @RequestBody RefreshTokenReqDto refreshTokenReqDto) {
         JwtToken getToken = tokenService.generateAccessToken(refreshTokenReqDto);
 
-        return new RspTemplate<>(HttpStatus.OK, "액세스 토큰 발급", getToken);
+        return new ResponseTemplate<>(HttpStatus.OK, "액세스 토큰 발급", getToken);
     }
 
 }

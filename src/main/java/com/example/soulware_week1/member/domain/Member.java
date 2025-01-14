@@ -8,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,18 +19,25 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SequenceGenerator(
+        name = "MEMBER_SEQ_GENERATOR",
+        sequenceName = "MEMBER_SEQ",
+        initialValue = 1, allocationSize = 50
+)
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ_GENERATOR")
     @Schema(description = "멤버 id", example = "1")
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(nullable = false)
+    @NotBlank(message = "아이디는 비워둘 수 없습니다.")
+    @Column(nullable = false, unique = true)
     @Schema(description = "이메일", example = "abcd@gmail.com")
     private String username;
 
+    @NotBlank(message = "비밀번호는 비워둘 수 없습니다.")
     @Column(nullable = false)
     @Schema(description = "비밀번호", example = "1234")
     private String password;
@@ -40,21 +49,13 @@ public class Member {
     @Schema(description = "권한", example = "ROLE_USER")
     private Role role;
 
-    @Schema(description = "최초 로그인 구분", example = "true, false")
-    private boolean firstLogin;
-
     @Builder
-    public Member(Long memberId, String username, String password, String nickname, Role role, Boolean firstLogin) {
+    public Member(Long memberId, String username, String password, String nickname, Role role) {
         this.memberId = memberId;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
-        this.firstLogin = firstLogin;
-    }
-
-    public void firstLoginUpdate() {
-        this.firstLogin = false;
     }
 
     @Override

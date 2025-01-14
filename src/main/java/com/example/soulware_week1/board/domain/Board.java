@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
         sequenceName = "BOARD_SEQ",
         initialValue = 1, allocationSize = 50
 )
-public class Board {
+public class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOARD_SEQ_GENERATOR")
@@ -37,7 +37,7 @@ public class Board {
     @Schema(description = "게시글 제목", example = "제목")
     private String title;
 
-    @Column
+    @Column(nullable = false, length = 5000)
     @Schema(description = "게시글 내용", example = "내용")
     private String contents;
 

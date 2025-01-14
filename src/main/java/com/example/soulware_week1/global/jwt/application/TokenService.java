@@ -7,6 +7,7 @@ import com.example.soulware_week1.global.jwt.api.dto.res.JwtToken;
 import com.example.soulware_week1.global.jwt.api.dto.res.MemberTokenResDto;
 import com.example.soulware_week1.global.jwt.domain.Token;
 import com.example.soulware_week1.global.jwt.domain.repository.TokenRepository;
+import com.example.soulware_week1.global.jwt.exception.ExistsUserNameException;
 import com.example.soulware_week1.global.jwt.exception.InvalidTokenException;
 import com.example.soulware_week1.global.jwt.exception.MemberNotFoundException;
 import com.example.soulware_week1.member.domain.Member;
@@ -71,7 +72,7 @@ public class TokenService {
     @Transactional
     public MemberTokenResDto signUp(SignUpReqDto signUpReqDto) {
         if (memberRepository.existsByUsername(signUpReqDto.username())) {
-            throw new IllegalArgumentException();
+            throw new ExistsUserNameException();
         }
 
         String encodedPassword = passwordEncoder.encode(signUpReqDto.password());
@@ -87,7 +88,6 @@ public class TokenService {
                 .password(encodedPassword)
                 .nickname(signUpReqDto.nickname())
                 .role(Role.ROLE_USER)
-                .firstLogin(true)
                 .build();
     }
 
