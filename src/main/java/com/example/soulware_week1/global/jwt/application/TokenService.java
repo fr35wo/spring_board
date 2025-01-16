@@ -69,7 +69,7 @@ public class TokenService {
         return jwtToken;
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public MemberTokenResDto signUp(SignUpReqDto signUpReqDto) {
         if (memberRepository.existsByUsername(signUpReqDto.username())) {
             throw new ExistsUserNameException();

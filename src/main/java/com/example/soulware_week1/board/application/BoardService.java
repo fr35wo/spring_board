@@ -17,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final TransactionalBoardService transactionalBoardService;
 
+    @Transactional(readOnly = true)
     public BoardListRspDto findAll(Pageable pageable) {
         Page<BoardResDto> boardResDto = boardRepository.findAll(pageable)
                 .map(BoardResDto::of);
@@ -35,7 +36,7 @@ public class BoardService {
     @Transactional
     public BoardResDto createBoard(BoardSaveReqDto boardSaveReqDto, Member member) {
         Board board = builderBoard(boardSaveReqDto, member);
-        Board saveBoard = boardRepository.save(board);
+        Board saveBoard = transactionalBoardService.saveBoard(board);
         return BoardResDto.of(saveBoard);
     }
 

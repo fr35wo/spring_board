@@ -21,4 +21,3 @@ public record SignUpReqDto(
         return password != null && password.equals(passwordCheck);
     }
 }
-

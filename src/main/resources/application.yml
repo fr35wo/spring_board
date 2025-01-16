@@ -7,20 +7,33 @@ spring:
       add-mappings: false
 
   datasource:
-    url: ${spring.datasource.url}
-    username: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    driver-class-name: ${spring.datasource.driver-class-name}
-    hikari:
-      maximum-pool-size: 130   # 최대 커넥션 개수
-      minimum-idle: 30         # 최소 유휴 커넥션 개수
-      idle-timeout: 30000     # 커넥션 유휴 타임아웃 (밀리초, 기본값 600000ms = 10분)
-      max-lifetime: 180000    # 커넥션 최대 생명주기 (밀리초, 기본값 1800000ms = 30분)
-      connection-timeout: 30000 # 커넥션 획득 타임아웃 (밀리초, 기본값 30000ms = 30초)
+    master:
+      hikari:
+        url: ${spring.datasource.master.hikari.jdbc-url}
+        username: ${spring.datasource.master.hikari.username}
+        password: ${spring.datasource.master.hikari.password}
+        driver-class-name: ${spring.datasource.master.hikari.driver-class-name}
+        maximum-pool-size: 55   # 최대 커넥션 개수
+        minimum-idle: 20         # 최소 유휴 커넥션 개수
+        idle-timeout: 30000     # 커넥션 유휴 타임아웃 (밀리초, 기본값 600000ms = 10분)
+        max-lifetime: 180000    # 커넥션 최대 생명주기 (밀리초, 기본값 1800000ms = 30분)
+        connection-timeout: 30000 # 커넥션 획득 타임아웃 (밀리초, 기본값 30000ms = 30초)
+    slave:
+      hikari:
+        url: ${spring.datasource.slave.hikari.jdbc-url}
+        username: ${spring.datasource.slave.hikari.username}
+        password: ${spring.datasource.slave.hikari.password}
+        driver-class-name: ${spring.datasource.slave.hikari.driver-class-name}
+        maximum-pool-size: 75   # 최대 커넥션 개수
+        minimum-idle: 20         # 최소 유휴 커넥션 개수
+        idle-timeout: 30000     # 커넥션 유휴 타임아웃 (밀리초, 기본값 600000ms = 10분)
+        max-lifetime: 180000    # 커넥션 최대 생명주기 (밀리초, 기본값 1800000ms = 30분)
+        connection-timeout: 30000 # 커넥션 획득 타임아웃 (밀리초, 기본값 30000ms = 30초)
 
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.MariaDBDialect
     properties:
       hibernate:
         id:
@@ -33,10 +46,15 @@ spring:
         format_sql: true
     open-in-view: false
 
+  sql:
+    init:
+      mode: always
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type.descriptor.sql: TRACE
     org.hibernate.engine.jdbc.batch.internal: DEBUG
 
 server:
@@ -44,7 +62,7 @@ server:
     mbeanregistry:
       enabled: true # 메트릭 확인
     threads:
-      max: 150          # 최대 스레드 수 (maximumPoolSize)
+      max: 200          # 최대 스레드 수 (maximumPoolSize)
       min-spare: 100     # 최소 대기 스레드 수 (corePoolSize와 비슷)
     accept-count: 1000     # 대기 큐 용량 (ArrayBlockingQueue와 유사)
   error:

@@ -10,9 +10,11 @@
     <!-- Console Appender (모든 로그 출력) -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
+            //@formatter:off
             <pattern>
-                %highlight(%d{yyyy-MM-dd HH:mm:ss}) [%thread] %-5level %cyan(%logger{36}) [%X{uuid}] - %msg%n
+                %highlight(%d{yyyy-MM-dd HH:mm:ss}) [%thread] %-5level %cyan(%logger{36}) [%X{uuid}] [%X{datasource}] - %msg%n
             </pattern>
+            //@formatter:on
         </encoder>
     </appender>
 

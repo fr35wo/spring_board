@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,7 +29,7 @@ public class DummyDataService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
-    private final HikariDataSource hikariDataSource;
+    private final @Qualifier("masterDataSource") HikariDataSource hikariDataSource;
 
     @Autowired
     public DummyDataService(JwtTokenProvider jwtTokenProvider,

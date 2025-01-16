@@ -42,7 +42,8 @@ public class JwtTokenProvider {
     private final CustomUserDetailService customUserDetailService;
 
     // application.yml에서 secret 값 가져와서 key에 저장
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, CustomUserDetailService customUserDetailService) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
+                            CustomUserDetailService customUserDetailService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.customUserDetailService = customUserDetailService;
